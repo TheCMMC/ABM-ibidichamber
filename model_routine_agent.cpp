@@ -247,8 +247,9 @@ void ModelRoutine::adjustSpAgent( const VIdx& vIdx, const JunctionData& junction
   
   REAL radius  = state.getModelReal( CELL_MODEL_REAL_RADIUS ); 
   S32 type = state.getType() ;
-  REAL xo = REAL ( Info::getDomainSize(0) * IF_GRID_SPACING ) * 0.5 ;
-  REAL yo = REAL ( Info::getDomainSize(1) * IF_GRID_SPACING ) * 0.5 ;
+  REAL xo = (17000 - 15200) / 2.0  ; // mm 
+  REAL yo = 0.0 ;
+  REAL zo = 0.0 ;
   
   REAL Fmag = 0.0 ; 
   
@@ -259,7 +260,7 @@ void ModelRoutine::adjustSpAgent( const VIdx& vIdx, const JunctionData& junction
   double z =  GRID_SIZE * vIdx[2] +  GRID_SIZE*0.5   +  vOffset[2];
   double u=0, v=0, w=0;
 
-  //cfd_query( (x - xo)*1e-6, (y - yo)*1e-6, z*1e-6, &u, &v, &w); // velocity units m/s
+  cfd_query( (x + xo)*1e-3, (y + yo)*1e-3, (z+zo)*1e-3, &u, &v, &w); // velocity units m/s
   
   // velocity of fluid in um/s
   vFluidV[0] = u*1e6 * VELOCITY_DAMPING_TEST ;
