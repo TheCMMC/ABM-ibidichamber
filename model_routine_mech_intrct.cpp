@@ -21,6 +21,9 @@ NOTICE:  These data were produced by Battelle Memorial Institute (BATTELLE) unde
 using namespace std;
 
 #if HAS_SPAGENT
+
+static REAL addAdhesionForce( REAL& Fij, const REAL& xij, const REAL& sij);
+
 void ModelRoutine::initJunctionSpAgent( const VIdx& vIdx0, const SpAgent& spAgent0, const UBEnv& ubEnv0, const VIdx& vIdx1, const SpAgent& spAgent1, const UBEnv& ubEnv1, const VReal& vDir/* unit direction vector from spAgent1 to spAgent0 */, const REAL dist, BOOL& link, JunctionEnd& end0/* dummy if link == false */, JunctionEnd& end1/* dummy if link == false */ ) {
 	/* MODEL START */
     link = false;
@@ -77,6 +80,8 @@ void ModelRoutine::computeMechIntrctSpAgent( const S32 iter, const VIdx& vIdx0, 
     REAL mag = 0.0;
     REAL stress = 0.0 ; 
     REAL xij  = D - dist ;
+    REAL Fij = 0.0 ;
+
 
     
     if ( A_AGENT_BOND_S[mtype0][mtype1] > 0.0 ){
@@ -88,7 +93,7 @@ void ModelRoutine::computeMechIntrctSpAgent( const S32 iter, const VIdx& vIdx0, 
             }
             else{
                 // compute elastic force
-                REAL Fij = 0.5 * xij * tanh(FABS(xij)*sij);
+                Fij = addAdhesionForce(Fij, xij, sij);
                 mag = mag + Fij ;
                 stress = stress + dist * Fij ;
 
@@ -119,12 +124,14 @@ void ModelRoutine::computeMechIntrctSpAgent( const S32 iter, const VIdx& vIdx0, 
                   end1.setType( JUNCTION_END_TYPE_MICROCARRIER );
                }
 
-               // add force rigth away
-               REAL D = R0 + R1;
-               REAL xij  = D - dist  ;
-               REAL Fij = 0.5 * xij * tanh(FABS(xij)*sij);
-               mag = mag + Fij ;
-               stress = stress + dist * Fij;
+               // add force right away
+                REAL D = R0 + R1;
+                REAL xij  = D - dist  ;
+                REAL Fij = 0.0;
+                Fij += addAdhesionForce(Fij, xij, sij);
+
+                mag = mag + Fij ;
+                stress = stress + dist * Fij;
             }
         }
         
@@ -152,5 +159,51 @@ void ModelRoutine::computeMechIntrctSpAgent( const S32 iter, const VIdx& vIdx0, 
     return;
 
 }
+
+static REAL addAdhesionForce( REAL& Fij, const REAL& xij, const REAL& sij){
+    // compute elastic force
+    switch (ADHESION_TYPE) {
+
+        //original tanh based adhesion force (more info ask Boris Aguilar)
+        case 1:
+            Fij += 0.5 * xij * tanh(FABS(xij)*sij);
+            break;
+
+        // piecewise linear based on dx.doi.org/10.1021/la500045q
+        // bond strenght sij should be 1 for cell-microcarrier bond in above literature
+        case 2: 
+            if ( xij < 1.5 ) { //distance in micron
+                Fij += sij * xij * 30; //force in nN
+            }
+            else if ( xij < 5) {
+                Fij += sij * 45 - 0.3 * (xij - 1.5);
+            }
+            else if ( xij < 13) {
+                Fij += sij * 43 - 5 * (xij - 5);
+            }
+            else if ( xij < 16.5) {
+                Fij += sij * 3.5 - 0.9 * (xij - 13);
+            }
+            break;
+
+        // adhesion force with Lennard-Jones potential
+        case 3:{
+            REAL sig; 
+            REAL eps = 45 ;
+            REAL LJBase = sig / FABS(xij);
+
+            Fij += 4 * eps * ( pow( LJBase , 6) - pow( LJBase , 12) ) * sij;
+            break;
+        }
+        // adhesion force by integrin simulation
+        case 4:
+            //TODO
+            break;
+
+    }
+
+    return Fij;
+}
+
 #endif
 
