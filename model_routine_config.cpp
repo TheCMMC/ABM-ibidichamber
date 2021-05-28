@@ -260,10 +260,6 @@ void ModelRoutine::updateSummaryOutputInfo( Vector<SummaryOutputInfo>& v_summary
   v_summaryOutputIntInfo.clear();
   v_summaryOutputRealInfo.resize( NUM_GRID_SUMMARY_REALS );
 
-  info.name = "Number of microcarriers";
-  info.type = SUMMARY_TYPE_SUM;
-  v_summaryOutputRealInfo[ GRID_SUMMARY_REAL_MICROCARRIERS  ] = info;
-
   info.name = "Number of Live Cells";
   info.type = SUMMARY_TYPE_SUM;
   v_summaryOutputRealInfo[GRID_SUMMARY_REAL_LIVE_CELLS] = info;

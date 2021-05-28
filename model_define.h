@@ -103,7 +103,6 @@ typedef enum _particle_extra_output_real_e {
 } particle_extra_output_real_e;
 
 typedef enum _grid_summary_real_e {
-        GRID_SUMMARY_REAL_MICROCARRIERS,
         GRID_SUMMARY_REAL_LIVE_CELLS,
         GRID_SUMMARY_REAL_DEATH,
         GRID_SUMMARY_REAL_MAX_DISP,
@@ -124,7 +123,10 @@ typedef enum _junction_end_real_e {
         NUM_JUNCTION_END_REALS
 } junction_end_real_e;
 
+// Parameters of initial conditions
+const REAL INITAL_CELL_DENSITY = 2.7700831024930747e-06 ; // # cells / um^2 
 
+// Parameters of cell prliferation
 const REAL A_DIFFUSION_COEFF_CELLS[ NUM_AGENT_TYPES ] = { 0.0, 0.0 };
 const REAL A_AGENT_FRICIONAL_DRAG[ NUM_AGENT_TYPES ] = { 1.2e-4, 1e-5 }; 
 const REAL A_CELL_RADIUS[ NUM_AGENT_TYPES ] = {  150.0 *0.5, 14.5 }; //14.5
