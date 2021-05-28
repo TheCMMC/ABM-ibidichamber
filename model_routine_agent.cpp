@@ -36,9 +36,8 @@ void ModelRoutine::addSpAgents( const BOOL init, const VIdx& startVIdx, const VI
    //REAL yo = REAL ( Info::getDomainSize(1) * IF_GRID_SPACING ) * 0.5 ; 
 
    if( init == true ) {
-      const S64 numUBs = regionVSize[0] * regionVSize[1]  ;
-      //S64 numMcarriers = ( S64 )( ( REAL )numUBs * A_MCARRIER_DENSITY_PER_UB  );
-      S64 numCells = ( S64 )( ( REAL )numUBs * A_CELL_DENSITY_PER_UB_AREA ) ;
+      const REAL num_xyUBs = (REAL) (regionVSize[0] * regionVSize[1])  ;
+      S64 numCells = ( S64 )( num_xyUBs * IF_GRID_SPACING * IF_GRID_SPACING * INITAL_CELL_DENSITY   ) ;
               
       for( S64 j = 0 ; j < numCells; j++ ) {
 

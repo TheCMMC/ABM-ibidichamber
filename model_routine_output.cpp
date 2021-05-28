@@ -102,7 +102,6 @@ void ModelRoutine::updateSummaryVar( const VIdx& vIdx, const NbrUBAgentData& nbr
         }
  
         /* GRID_SUMMARY_REAL_LIVE_CELLS is set in model_routine_config.cpp */
-        v_realVal[ GRID_SUMMARY_REAL_MICROCARRIERS ] = count_micro;
         v_realVal[ GRID_SUMMARY_REAL_LIVE_CELLS ] = count_live;
         v_realVal[ GRID_SUMMARY_REAL_DEATH ] = count_death;
         v_realVal[GRID_SUMMARY_REAL_MAX_DISP ] = max_disp * BASELINE_TIME_STEP_DURATION ;
