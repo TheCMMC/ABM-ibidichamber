@@ -160,7 +160,7 @@ const REAL A_CELL_DENSITY_PER_UB_AREA = 10/ ( 8.0 * 64 ) ; //
 const REAL INIT_CELLS_PER_MICROCARRIER = 5; //10;
 const REAL A_CELL_D_MAX[ NUM_AGENT_TYPES ] = {150.0*1.25, 20.0*1.25};
 
-
+const S32 ADHESION_TYPE = 2; //change the type of adhesion implementation, 1 for tanh based, 2 for piecewise linear, 3 for Lennard-Jones potential
 const REAL ADHESION_S = 0.01;
 const REAL RANDOM_VIBRATION_SCALE = 0.05;
 
